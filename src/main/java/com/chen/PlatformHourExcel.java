@@ -4,6 +4,7 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 //月台时价
 @Data
@@ -13,7 +14,8 @@ public class PlatformHourExcel {
         return new BigDecimal(d);
     }
 
-    PlatformHour conv(){
+    PlatformHour conv(int year,int month){
+
         PlatformHour hour = new PlatformHour();
         hour.setDevice(this.device);
         hour.setManHour(newBigDecimal(this.manHour));
@@ -32,6 +34,8 @@ public class PlatformHourExcel {
         hour.setLabour(newBigDecimal(this.labour));
         hour.setOtherDepreciation(newBigDecimal(this.otherDepreciation));
         hour.setDeviceDepreciation(newBigDecimal(this.deviceDepreciation));
+        hour.setYear(year);
+        hour.setMonth(month);
         return hour;
     }
 

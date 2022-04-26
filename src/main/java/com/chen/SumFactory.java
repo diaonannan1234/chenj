@@ -1,8 +1,12 @@
 package com.chen;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,9 +19,12 @@ public class SumFactory {
    @Autowired private FactoryResultRepository factoryResultRepository;
    private Map<String,PlatformHour> platMap;
 
-   public void exportR(){
-       List<FirstFactory> firstFactoryList = firstFactoryRepository.findAll();
-        this.loadPlat();
+   public void exportR(int year,int month){
+
+       List<FirstFactory> firstFactoryList = firstFactoryRepository.findAll(year,month);
+       if(platMap == null ){
+         this.loadPlat();
+       }
         List<FactoryResult> rs = new ArrayList();
         firstFactoryList.forEach(f -> {
             rs.add(conv(f));

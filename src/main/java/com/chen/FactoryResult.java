@@ -1,5 +1,7 @@
 package com.chen;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
+import com.alibaba.excel.annotation.ExcelProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -12,7 +14,12 @@ public class FactoryResult {
     @Id
     @GeneratedValue(generator = "uuid.hex")
     @GenericGenerator(name = "uuid.hex", strategy = "org.hibernate.id.UUIDHexGenerator")
+    @ExcelIgnore
     private String id;
+    @ExcelIgnore
+    private int year;
+    @ExcelIgnore
+    private int month;
      public FactoryResult(){}
     public FactoryResult(FirstFactory first) {
         this();
@@ -23,12 +30,42 @@ public class FactoryResult {
         this.setMaterialName(first.getMaterialName());
         this.setCount(first.getCount());
         this.setDevice(first.getDevice());
-        this.setManHour(first.getManHour().floatValue());
+        this.setManHour(first.getManHour());
+        this.setYear(first.getYear());
+        this.setMonth(first.getMonth());
     }
 
-    private float s1(BigDecimal a){
-         BigDecimal b = new BigDecimal(this.getManHour());
-         return a.multiply(b).floatValue();
+    public FactoryResult(Object[] ob) {
+
+            this.fiscalPeriod = (String)(ob[0]);
+            this.projectNumber = (String)(ob[1]);
+            this.projectName = (String)(ob[2]);
+            this.materialCode = (String)(ob[3]);
+            this.materialName = (String)(ob[4]);
+            this.count = (int)(ob[5]);
+            this.device = (String)(ob[6]);
+            this.manHour = ob[7] == null ? BigDecimal.ZERO : (BigDecimal)ob[7] ;
+            this.directRegularSalary = ob[8] == null ? BigDecimal.ZERO : (BigDecimal)ob[7] ;
+            this.directLaborSalary = ob[9] == null ? BigDecimal.ZERO : (BigDecimal)ob[7] ;
+            this.indirectRegularSalary = ob[10] == null ? BigDecimal.ZERO : (BigDecimal)ob[7] ;
+            this.indirectLaborSalary = ob[11] == null ? BigDecimal.ZERO : (BigDecimal)ob[7] ;
+            this.waterElectricity = ob[12] == null ? BigDecimal.ZERO : (BigDecimal)ob[7] ;
+            this.tool = ob[13] == null ? BigDecimal.ZERO : (BigDecimal)ob[7] ;
+            this.consume = ob[14] == null ? BigDecimal.ZERO : (BigDecimal)ob[7] ;
+            this.repair = ob[15] == null ? BigDecimal.ZERO : (BigDecimal)ob[7] ;
+            this.mealFee = ob[16] == null ? BigDecimal.ZERO : (BigDecimal)ob[7] ;
+            this.insurance = ob[17] == null ? BigDecimal.ZERO : (BigDecimal)ob[7] ;
+            this.office = ob[18] == null ? BigDecimal.ZERO : (BigDecimal)ob[7] ;
+            this.travel = ob[19] == null ? BigDecimal.ZERO : (BigDecimal)ob[7] ;
+            this.labour = ob[20] == null ? BigDecimal.ZERO : (BigDecimal)ob[7] ;
+            this.otherDepreciation = ob[21] == null ? BigDecimal.ZERO : (BigDecimal)ob[7] ;
+            this.deviceDepreciation = ob[22] == null ? BigDecimal.ZERO : (BigDecimal)ob[7] ;
+
+    }
+
+    private BigDecimal s1(BigDecimal a){
+
+         return a.multiply(this.getManHour());
      }
 
     public void sum(PlatformHour h){
@@ -66,69 +103,92 @@ public class FactoryResult {
 
 
     //会计期间
+    @ExcelProperty("会计期间")
     private String fiscalPeriod;
 
     //项目号
+    @ExcelProperty("项目号")
     private String projectNumber;
     // 项目名称
+    @ExcelProperty("项目名称")
     private String projectName;
     //物料编码
+    @ExcelProperty("物料编码")
     private String  materialCode;
 
     // 物料名称
+    @ExcelProperty("物料名称")
     private String materialName;
     // 数量
+    @ExcelProperty("数量")
     private int count;
     // 设备
+    @ExcelProperty("设备")
     private String device;
     // 工时
-    @Column(scale=2)
-    private float manHour;
+    @ExcelProperty("工时")
+    @Column(columnDefinition="decimal(18,2)")
+    private BigDecimal manHour;
     // 直接人工正式工资
-    @Column(scale=2)
-    private float directRegularSalary;
+    @ExcelProperty("直接人工正式工资")
+    @Column(columnDefinition="decimal(18,2)")
+    private BigDecimal directRegularSalary;
     // 直接人工劳务工资
-    @Column(scale=2)
-    private float directLaborSalary;
+    @ExcelProperty("直接人工劳务工资")
+    @Column(columnDefinition="decimal(18,2)")
+    private BigDecimal directLaborSalary;
     // 间接人工正式工资
-    @Column(scale=2)
-    private float indirectRegularSalary;
+    @ExcelProperty("间接人工正式工资")
+    @Column(columnDefinition="decimal(18,2)")
+    private BigDecimal indirectRegularSalary;
     // 间接人工劳务工资
-    @Column(scale=2)
-    private float  indirectLaborSalary;
+    @ExcelProperty("间接人工劳务工资")
+    @Column(columnDefinition="decimal(18,2)")
+    private BigDecimal  indirectLaborSalary;
     // 水电
-    @Column(scale=2)
-    private float waterElectricity;
+    @ExcelProperty("水电")
+    @Column(columnDefinition="decimal(18,2)")
+    private BigDecimal waterElectricity;
     // 刀具
-    @Column(scale=2)
-    private float tool;
+    @ExcelProperty("刀具")
+    @Column(columnDefinition="decimal(18,2)")
+    private BigDecimal tool;
     // 消耗
-    @Column(scale=2)
-    private float consume;
+    @ExcelProperty("消耗")
+    @Column(columnDefinition="decimal(18,2)")
+    private BigDecimal consume;
     // 修理
-    @Column(scale=2)
-    private float repair;
+    @ExcelProperty("修理")
+    @Column(columnDefinition="decimal(18,2)")
+    private BigDecimal repair;
     // 餐费
-    @Column(scale=2)
-    private float mealFee;
+    @ExcelProperty("餐费")
+    @Column(columnDefinition="decimal(18,2)")
+    private BigDecimal mealFee;
     // 保险
-    @Column(scale=2)
-    private float insurance;
+    @ExcelProperty("保险")
+    @Column(columnDefinition="decimal(18,2)")
+    private BigDecimal insurance;
     // 办公
-    @Column(scale=2)
-    private float office;
+    @ExcelProperty("办公")
+    @Column(columnDefinition="decimal(18,2)")
+    private BigDecimal office;
     // 差施
-    @Column(scale=2)
-    private float travel;
+    @ExcelProperty("差施")
+    @Column(columnDefinition="decimal(18,2)")
+    private BigDecimal travel;
     // 劳保
-    @Column(scale=2)
-    private float labour;
+    @ExcelProperty("劳保")
+    @Column(columnDefinition="decimal(18,2)")
+    private BigDecimal labour;
     // 其他折旧
-    @Column(scale=2)
-    private float otherDepreciation;
+    @ExcelProperty("其他折旧")
+    @Column(columnDefinition="decimal(18,2)")
+    private BigDecimal otherDepreciation;
     // 设备折旧
-    @Column(scale=2)
-    private float deviceDepreciation;
+    @ExcelProperty("设备折旧")
+    @Column(columnDefinition="decimal(18,2)")
+    private BigDecimal deviceDepreciation;
 
     public String getId() {
         return id;
@@ -136,6 +196,22 @@ public class FactoryResult {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
     }
 
     public String getFiscalPeriod() {
@@ -194,131 +270,131 @@ public class FactoryResult {
         this.device = device;
     }
 
-    public float getManHour() {
+    public BigDecimal getManHour() {
         return manHour;
     }
 
-    public void setManHour(float manHour) {
+    public void setManHour(BigDecimal manHour) {
         this.manHour = manHour;
     }
 
-    public float getDirectRegularSalary() {
+    public BigDecimal getDirectRegularSalary() {
         return directRegularSalary;
     }
 
-    public void setDirectRegularSalary(float directRegularSalary) {
+    public void setDirectRegularSalary(BigDecimal directRegularSalary) {
         this.directRegularSalary = directRegularSalary;
     }
 
-    public float getDirectLaborSalary() {
+    public BigDecimal getDirectLaborSalary() {
         return directLaborSalary;
     }
 
-    public void setDirectLaborSalary(float directLaborSalary) {
+    public void setDirectLaborSalary(BigDecimal directLaborSalary) {
         this.directLaborSalary = directLaborSalary;
     }
 
-    public float getIndirectRegularSalary() {
+    public BigDecimal getIndirectRegularSalary() {
         return indirectRegularSalary;
     }
 
-    public void setIndirectRegularSalary(float indirectRegularSalary) {
+    public void setIndirectRegularSalary(BigDecimal indirectRegularSalary) {
         this.indirectRegularSalary = indirectRegularSalary;
     }
 
-    public float getIndirectLaborSalary() {
+    public BigDecimal getIndirectLaborSalary() {
         return indirectLaborSalary;
     }
 
-    public void setIndirectLaborSalary(float indirectLaborSalary) {
+    public void setIndirectLaborSalary(BigDecimal indirectLaborSalary) {
         this.indirectLaborSalary = indirectLaborSalary;
     }
 
-    public float getWaterElectricity() {
+    public BigDecimal getWaterElectricity() {
         return waterElectricity;
     }
 
-    public void setWaterElectricity(float waterElectricity) {
+    public void setWaterElectricity(BigDecimal waterElectricity) {
         this.waterElectricity = waterElectricity;
     }
 
-    public float getTool() {
+    public BigDecimal getTool() {
         return tool;
     }
 
-    public void setTool(float tool) {
+    public void setTool(BigDecimal tool) {
         this.tool = tool;
     }
 
-    public float getConsume() {
+    public BigDecimal getConsume() {
         return consume;
     }
 
-    public void setConsume(float consume) {
+    public void setConsume(BigDecimal consume) {
         this.consume = consume;
     }
 
-    public float getRepair() {
+    public BigDecimal getRepair() {
         return repair;
     }
 
-    public void setRepair(float repair) {
+    public void setRepair(BigDecimal repair) {
         this.repair = repair;
     }
 
-    public float getMealFee() {
+    public BigDecimal getMealFee() {
         return mealFee;
     }
 
-    public void setMealFee(float mealFee) {
+    public void setMealFee(BigDecimal mealFee) {
         this.mealFee = mealFee;
     }
 
-    public float getInsurance() {
+    public BigDecimal getInsurance() {
         return insurance;
     }
 
-    public void setInsurance(float insurance) {
+    public void setInsurance(BigDecimal insurance) {
         this.insurance = insurance;
     }
 
-    public float getOffice() {
+    public BigDecimal getOffice() {
         return office;
     }
 
-    public void setOffice(float office) {
+    public void setOffice(BigDecimal office) {
         this.office = office;
     }
 
-    public float getTravel() {
+    public BigDecimal getTravel() {
         return travel;
     }
 
-    public void setTravel(float travel) {
+    public void setTravel(BigDecimal travel) {
         this.travel = travel;
     }
 
-    public float getLabour() {
+    public BigDecimal getLabour() {
         return labour;
     }
 
-    public void setLabour(float labour) {
+    public void setLabour(BigDecimal labour) {
         this.labour = labour;
     }
 
-    public float getOtherDepreciation() {
+    public BigDecimal getOtherDepreciation() {
         return otherDepreciation;
     }
 
-    public void setOtherDepreciation(float otherDepreciation) {
+    public void setOtherDepreciation(BigDecimal otherDepreciation) {
         this.otherDepreciation = otherDepreciation;
     }
 
-    public float getDeviceDepreciation() {
+    public BigDecimal getDeviceDepreciation() {
         return deviceDepreciation;
     }
 
-    public void setDeviceDepreciation(float deviceDepreciation) {
+    public void setDeviceDepreciation(BigDecimal deviceDepreciation) {
         this.deviceDepreciation = deviceDepreciation;
     }
 }

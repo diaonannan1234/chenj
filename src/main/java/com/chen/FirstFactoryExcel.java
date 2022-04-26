@@ -4,12 +4,14 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 //一厂
 @Data
 public class FirstFactoryExcel {
 
-    public FirstFactory conv(){
+    public FirstFactory conv(int year,int month){
+
         FirstFactory firstFactory = new FirstFactory();
         firstFactory.setFiscalPeriod(this.fiscalPeriod);
         firstFactory.setProjectNumber(this.projectNumber);
@@ -19,6 +21,8 @@ public class FirstFactoryExcel {
         firstFactory.setCount(this.count);
         firstFactory.setDevice(this.device);
         firstFactory.setManHour(new BigDecimal(this.getManHour()));
+        firstFactory.setYear(year);
+        firstFactory.setMonth(month);
         return firstFactory;
     }
 

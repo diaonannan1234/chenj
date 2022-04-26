@@ -4,6 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 //月台时价
 @Entity
@@ -14,6 +15,10 @@ public class PlatformHour {
     @GeneratedValue(generator = "uuid.hex")
     @GenericGenerator(name = "uuid.hex", strategy = "org.hibernate.id.UUIDHexGenerator")
     private String id;
+
+    private int year;
+
+    private int month;
    // 设备
     private String device;
     // 工时
@@ -64,6 +69,22 @@ public class PlatformHour {
     // 设备折旧
     @Column(columnDefinition="decimal(18,2)")
     private BigDecimal deviceDepreciation;
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
 
     public String getId() {
         return id;

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,35 +29,48 @@ public class ExcelWeb {
     @Autowired SumFactory sumFactory;
 
     @PostMapping("/first")
-    public void first(@RequestExcel List<FirstFactoryExcel> dataList, BindingResult bindingResult) {
+    public void first(@RequestExcel List<FirstFactoryExcel> dataList
+            ,int year
+            ,int month
+            , BindingResult bindingResult) {
         // JSR 303 校验通用校验获取失败的数据
         //List<ErrorMessage> errorMessageList = (List<ErrorMessage>) bindingResult.getTarget();
         List<FirstFactory> factoryList = dataList.stream()
-                .map(a -> a.conv())
+                .map(a -> a.conv(year,month))
                 .collect(Collectors.toList());
         firstFactoryRepository.saveAll(factoryList);
     }
 
     @PostMapping("/sec")
-    public void sec(@RequestExcel List<PlatformHourExcel> dataList, BindingResult bindingResult) {
+    public void sec(@RequestExcel List<PlatformHourExcel> dataList
+            ,int year
+            ,int month
+            ,BindingResult bindingResult) {
         // JSR 303 校验通用校验获取失败的数据
         //List<ErrorMessage> errorMessageList = (List<ErrorMessage>) bindingResult.getTarget();
         List<PlatformHour> factoryList = dataList.stream()
-                .map(a -> a.conv())
+                .map(a -> a.conv(year,month))
                 .collect(Collectors.toList());
        platFormHourRepository.saveAll(factoryList);
     }
 
+
     @GetMapping("/sum")
-    public void sum(){
-        sumFactory.exportR();
+    public void sum(int year,int month){
+
+        sumFactory.exportR(year,month);
     }
 
     @ResponseExcel(name = "test", sheets = @Sheet(sheetName = "testSheet1"))
     @GetMapping("/excel")
-    public List<FactoryResult> excel() {
+    public List<FactoryResult> excel(int year,int month) {
 
-        return factoryResultRepository.findAll();
+        //return factoryResultRepository.findAll();
+        List<Object[]> fr = factoryResultRepository.findAllByGroup(year,month);
+        List<FactoryResult> s =  fr.stream()
+                  .map(ob -> new FactoryResult(ob))
+                  .collect(Collectors.toList());
+        return s;
     }
 
     @GetMapping("/delete")

@@ -3,18 +3,25 @@ package com.chen;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Date;
 
 //一厂
 @Entity
 @Table(name = "T_FIRST_FACTORY")
-public class FirstFactory {
+public class FirstFactory implements Serializable {
 
 
     @Id
     @GeneratedValue(generator = "uuid.hex")
     @GenericGenerator(name = "uuid.hex", strategy = "org.hibernate.id.UUIDHexGenerator")
     private String id;
+
+    private int year;
+
+    private int month;
 
     //会计期间
     private String fiscalPeriod;
@@ -36,12 +43,29 @@ public class FirstFactory {
     @Column(columnDefinition="decimal(18,2)")
     private BigDecimal manHour;
 
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+
     }
 
     public String getFiscalPeriod() {
@@ -106,5 +130,19 @@ public class FirstFactory {
 
     public void setManHour(BigDecimal manHour) {
         this.manHour = manHour;
+    }
+
+    @Override
+    public String toString() {
+        return "FirstFactory{" +
+                ", fiscalPeriod='" + fiscalPeriod + '\'' +
+                ", projectNumber='" + projectNumber + '\'' +
+                ", projectName='" + projectName + '\'' +
+                ", materialCode='" + materialCode + '\'' +
+                ", materialName='" + materialName + '\'' +
+                ", count=" + count +
+                ", device='" + device + '\'' +
+                ", manHour=" + manHour +
+                '}';
     }
 }
