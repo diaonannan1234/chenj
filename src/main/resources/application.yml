@@ -1,0 +1,24 @@
+server:
+  port: 8899
+spring:
+  application:
+    name: chenj
+
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+      #数据库相关的配置url  -SSL连接设置为false
+    url: jdbc:mysql://39.100.238.150:3306/test?characterEncoding=UTF-8&&serverTimezone=GMT
+      #配置用户名
+    username: root
+      #配置密码
+    password: yundingyun.com
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+    show-sql: true
+
+
+

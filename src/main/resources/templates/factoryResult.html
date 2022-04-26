@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+ <head>
+         <meta charset="UTF-8">
+         <title>一厂报表</title>
+     <meta charset="UTF-8"/>
+     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+     <link href='https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css' rel='stylesheet'>
+ </head>
+ <body>
+ <div id="msg"></div>
+        <input id="selectText" type="text" /><button id="selectBtn">查询</button>
+ <input id="selectText" type="text" /><button id="upload">查询</button>
+ <input id="currentUserName" type="hidden" th:value="${currentUser}">
+     <div id="userDiv" th:fragment="article_type">
+         <table class="table table-bordered">
+             <tr>
+                 <td th:text="'pageSize:'+${users.pageable.pageSize}"></td>
+                 <td th:text="'pageNumber:'+ ${users.pageable.pageNumber}"></td>
+                 <td th:text="'totalElements:'+${users.totalElements}"></td>
+                 <td th:text="'totalPages:'+${users.totalPages}"></td>
+                 <td th:text="'size:'+${users.size}"></td>
+             </tr>
+         </table>
+         <table id="table1" class="table table-bordered">
+             <tr>
+                 <td>员工姓名</td>
+                 <td>入职日期</td>
+                 <td>工作城市</td>
+                 <td>部门</td>
+             </tr>
+             <tr th:each="user : ${users}" >
+                 <td th:text="${user.employeeName}"></td>
+                 <td th:text="${user.enrollDate}"></td>
+                 <td th:if="${user.address} != null" th:text="${user.address.street}"></td>
+
+                 <td th:if="${user.department} != null" th:text="${user.department.name}"></td>
+
+             </tr>
+         </table>
+     </div>
+     <script src='https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js'></script>
+     <script src='https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js'></script>
+
+
+     <script type="text/javascript" th:inline="javascript">
+         /*<![CDATA[*/
+
+             $('#selectBtn').click(function () {
+                 var v1 = 'employeeName=='+$('#selectText').val();
+                 $.get({
+                     url:'/user/all/search',
+                     data:{search:v1},
+                     success: function (result) {
+                         $("#userDiv").html(result);
+                     }
+                 });
+             });
+
+         const UUIDGeneratorBrowser = () =>
+             ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+                 (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
+             );
+
+         var userName = document.getElementById("currentUserName").value;
+         var msg = document.getElementById("msg");
+         // var wsServer = 'ws://10.68.67.93:8676/ws/'+UUIDGeneratorBrowser();
+         var wsServer = 'ws://10.68.67.93:8676/ws/'+userName
+         //duwei';
+         var websocket = new WebSocket(wsServer);
+
+         //监听连接打开
+         websocket.onopen = function (evt) {
+             //ws.send(UUIDGeneratorBrowser())
+            // msg.innerHTML = "The connection is open";
+         };
+
+         //监听服务器数据推送
+         websocket.onmessage = function (evt) {
+             // var data = $.parseJSON(evt.data);
+             // var h = "<table class=\"table table-bordered\"><tr><td>公告标题</td><td>公告内容</td></tr>";
+             // for(i=0;i<data.length;i++){
+             //     h += "<tr>";
+             //     h += "<td>" + data[i].messageTitle + "</td>";
+             //     h += "<td>" + data[i].context + "</td>";
+             //     h += "</tr>";
+             // }
+             // h += "</table>";
+             // msg.innerHTML = h;
+             msg.innerHTML = evt.data;
+         };
+
+         //监听连接关闭
+         websocket.onclose = function (evt) {
+             //alert("连接关闭");
+         };
+
+         function send() {
+             var text = document.getElementById("text").value
+             websocket.send(text);
+         }
+
+         /*]]>*/
+     </script>
+ </body>
+</html>
